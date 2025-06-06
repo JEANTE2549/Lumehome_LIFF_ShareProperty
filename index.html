@@ -33,6 +33,7 @@
       await liff.init({ liffId });
       const query = new URLSearchParams(window.location.search);
       const propertyId = query.get("propertyId");
+      console.log("Property ID:", propertyId);
 
       if (!propertyId) {
         document.getElementById("content").innerHTML = "ไม่พบรหัสบ้านที่ส่งมา ❌";
