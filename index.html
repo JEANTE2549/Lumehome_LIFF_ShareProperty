@@ -31,14 +31,21 @@
 
     async function main() {
       await liff.init({ liffId });
+
+      if (!liff.isLoggedIn()) {
+        liff.login();
+        return;
+      }
+
       const query = new URLSearchParams(window.location.search);
       const propertyId = query.get("propertyId");
-      console.log("Property ID:", propertyId);
 
       if (!propertyId) {
         document.getElementById("content").innerHTML = "ไม่พบรหัสบ้านที่ส่งมา ❌";
         return;
       }
+
+      console.log("Property ID:", propertyId);
 
       const friendship = await liff.getFriendship();
 
@@ -53,7 +60,7 @@
         const profile = await liff.getProfile();
         const lineUserId = profile.userId;
 
-        await fetch("https://jeante2549.github.io/Lumehome_LIFF_ShareProperty/sendPropertyDetail", {
+        await fetch("https://chatbot-2mtf.onrender.com/api/sendPropertyDetail", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ lineUserId, propertyId })
