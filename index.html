@@ -59,6 +59,7 @@
       } else {
         const profile = await liff.getProfile();
         const lineUserId = profile.userId;
+        console.log("lineUserId:", lineUserId);
 
         await fetch("https://chatbot-tqts.onrender.com/api/sendPropertyDetail", {
           method: "POST",
