@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>รายละเอียดบ้าน</title>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2rem;
+      text-align: center;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      border: none;
+      background-color: #00c300;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2>กำลังโหลดรายละเอียดบ้าน...</h2>
+  <div id="content"></div>
+
+  <script>
+    const liffId = "YOUR_LIFF_ID"; 
+
+    async function main() {
+      await liff.init({ liffId });
+      const query = new URLSearchParams(window.location.search);
+      const propertyId = query.get("propertyId");
+
+      if (!propertyId) {
+        document.getElementById("content").innerHTML = "ไม่พบรหัสบ้านที่ส่งมา ❌";
+        return;
+      }
+
+      const friendship = await liff.getFriendship();
+
+      if (!friendship.friendFlag) {
+        document.getElementById("content").innerHTML = `
+          <p>กรุณาเพิ่มเพื่อนก่อนเพื่อดูรายละเอียดบ้านนี้ 🏡</p>
+          <a href="https://line.me/R/ti/p/YOUR_LINE_ID" target="_blank">
+            <button>➕ เพิ่มเพื่อน</button>
+          </a>
+        `;
+      } else {
+        const profile = await liff.getProfile();
+        const lineUserId = profile.userId;
+
+        await fetch("https://your-backend.com/api/sendPropertyDetail", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ lineUserId, propertyId })
+        });
+
+        document.getElementById("content").innerHTML = `
+          <p>ส่งรายละเอียดบ้านไปยัง LINE ของคุณแล้ว 🎉</p>
+        `;
+      }
+    }
+
+    main();
+  </script>
+</body>
+</html>
