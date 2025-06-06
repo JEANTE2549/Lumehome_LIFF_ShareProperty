@@ -61,15 +61,33 @@
         const lineUserId = profile.userId;
         console.log("lineUserId:", lineUserId);
 
-        await fetch("https://chatbot-tqts.onrender.com/api/sendPropertyDetail", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ lineUserId, propertyId })
-        });
+        try {
+  const response = await fetch("https://chatbot-tqts.onrender.com/api/sendPropertyDetail", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ lineUserId, propertyId })
+  });
 
-        document.getElementById("content").innerHTML = `
-          <p>ส่งรายละเอียดบ้านไปยัง LINE ของคุณแล้ว 🎉</p>
-        `;
+    console.log("API response:", response);
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("❌ API Error:", response.status, errorText);
+      document.getElementById("content").innerHTML = `
+        <p>เกิดข้อผิดพลาดในการส่งข้อมูล 🛑<br/>
+        รหัส: ${response.status}</p>
+      `;
+    } else {
+      document.getElementById("content").innerHTML = `
+        <p>ส่งรายละเอียดบ้านไปยัง LINE ของคุณแล้ว 🎉</p>
+      `;
+    }
+  } catch (err) {
+    console.error("❌ Fetch error:", err);
+    document.getElementById("content").innerHTML = `
+      <p>เกิดข้อผิดพลาด: ${err.message}</p>
+    `;
+  }
       }
     }
 
