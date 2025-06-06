@@ -60,7 +60,7 @@
         const profile = await liff.getProfile();
         const lineUserId = profile.userId;
 
-        await fetch("https://chatbot-2mtf.onrender.com/api/sendPropertyDetail", {
+        await fetch("https://chatbot-tqts.onrender.com/api/sendPropertyDetail", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ lineUserId, propertyId })
